@@ -314,3 +314,72 @@ broker.start()
     console.log("service.collect",result);
 }))
 ```
+
+### Pagination
+
+For action `find` and `list` support paging as default.
+
+```typescript
+import { ServiceBroker } from "moleculer";
+import KnService from "will-db";
+
+const broker = new ServiceBroker({
+    logLevel: "debug"
+});
+broker.createService({
+    name: "service",
+    mixins: [KnService],
+    model: {
+        name: "test1",
+        alias: { privateAlias: "MYSQL" },
+    },
+    //as default rowsPerPage = 20 and maxRowsPerPage = 100
+    //this setting will override default value
+    settings: {
+        rowsPerPage: 10,
+        maxRowsPerPage: 200,
+    }
+});
+
+broker.start()
+//default page number = 1
+.then(() => broker.call("service.list").then((result) => { 
+    console.log("service.list",result);
+}))
+//specified sorter field and order direction
+.then(() => broker.call("service.list",{page: 2, sorter: "field1", orderby: "ASC"}).then((result) => { 
+    console.log("service.list",result);
+}))
+
+.then(() => broker.call("service.list",{page: 3, sorter: "field1", orderby: "DESC"}).then((result) => { 
+    console.log("service.list",result);
+}))
+
+//defined paging: rowsPerPage = 10 as parameter
+.then(() => broker.call("service.list",{page: 1, rowsPerPage: 10 }).then((result) => { 
+    console.log("service.list",result);
+}))
+```
+
+#### Paging Result
+
+Result set of paging include attribute
+
+    offsets: {
+        //total rows from query
+        totalRows: 27,
+        limit: 10,
+        //current page
+        page: 1,
+        //offset query depending on current page
+        offset: 0,
+        //number of rows per page
+        rowsPerPage: 10,
+        //total pages
+        totalPages: 3,
+        //sorter field
+        sorter: 'field1',
+        //order direction
+        orderby: 'ASC'
+    }
+

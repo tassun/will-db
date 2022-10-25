@@ -1,7 +1,8 @@
 import { ServiceBroker, ServiceSchema } from "moleculer";
 import { BaseHandler } from "./BaseHandler";
-import { DBConfig, DBConnections, DBConnector, ResultSet } from "will-sql";
-import { KnModel } from "./KnAlias";
+import { DBConfig, DBConnections, DBConnector, PageOffset, ResultSet } from "will-sql";
+import { KnModel, PageSetting } from "./KnAlias";
+import { SQLUtils } from "./SQLUtils";
 
 export class KnBase extends BaseHandler {
     public broker? : ServiceBroker;
@@ -14,6 +15,10 @@ export class KnBase extends BaseHandler {
         let model = this.service?.schema.model;
         if(model) {
             this.model = model;
+        }
+        let settings = this.service?.schema.settings;
+        if(settings) {
+            this.settings = { ...this.settings, ...settings };
         }
     }
 
@@ -30,6 +35,18 @@ export class KnBase extends BaseHandler {
         return DBConnections.getDBConnector(schema);
     }
     
+    public getPageSetting(params: any) : PageSetting {
+        return SQLUtils.getPageSetting(this.settings, params);
+    }
+
+    public calculatePageOffset(pageOffset: PageOffset, totalRows?: number) : PageOffset {
+        return SQLUtils.calculatePageOffset(pageOffset, totalRows);
+    }
+
+    public createQueryPaging(config: DBConfig, pageOffset: PageOffset) : string {
+        return SQLUtils.createQueryPaging(config, pageOffset);
+    }
+
     public fatal(...args: any[]): void {
         this.logger.fatal(...args);
     }
@@ -128,5 +145,5 @@ export class KnBase extends BaseHandler {
         }
         return false;
     }
-
+         
 }

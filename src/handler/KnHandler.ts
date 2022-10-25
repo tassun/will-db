@@ -1,8 +1,12 @@
 import { KnBase } from "./KnBase";
-import { KnModel } from "./KnAlias";
-import { DBError, KnSQL, ResultSet, SQLInterface } from "will-sql";
+import { KeyPageSetting, KnModel, PageSetting } from "./KnAlias";
+import { DBConfig, DBError, DBUtils, KnSQL, ResultSet, SQLInterface } from "will-sql";
 
 export class KnHandler extends KnBase {
+
+    private isInPageSetting(key: string) : boolean {
+        return KeyPageSetting.includes(key);
+    }
 
     protected buildInsertQuery(model: KnModel, params?: any) : SQLInterface {
         let cols = "";
@@ -30,16 +34,18 @@ export class KnHandler extends KnBase {
             //if do not defined fields then using from parameters setting
             let first = true;
             for(let p in params) {
-                let pv = params[p];
-                knsql.set(p,pv);
-                if(!found) {
-                    if(!first) {
-                        cols += ",";
-                        vals += ",";
+                if(!this.isInPageSetting(p)) {
+                    let pv = params[p];
+                    knsql.set(p,pv);
+                    if(!found) {
+                        if(!first) {
+                            cols += ",";
+                            vals += ",";
+                        }
+                        cols += p;
+                        vals += "?"+p;
+                        first = false;
                     }
-                    cols += p;
-                    vals += "?"+p;
-                    first = false;
                 }
             }
         }
@@ -54,22 +60,24 @@ export class KnHandler extends KnBase {
         knsql.append(model.name).append(" set ");
         if(model.fields) {
             for(let fname in model.fields) {
-                let dbf = model.fields[fname];
-                let fcalc = dbf.calculated !== undefined && dbf.calculated;
-                let fkey = dbf.key !== undefined && dbf.key;
-                if(!fcalc && !fkey) {
-                    if(params && params[fname]) {
-                        if(found) {
-                            knsql.append(", ");
+                if(!this.isInPageSetting(fname)) {
+                    let dbf = model.fields[fname];
+                    let fcalc = dbf.calculated !== undefined && dbf.calculated;
+                    let fkey = dbf.key !== undefined && dbf.key;
+                    if(!fcalc && !fkey) {
+                        if(params && params[fname]) {
+                            if(found) {
+                                knsql.append(", ");
+                            }
+                            knsql.append(fname).append(" = ?").append(fname);
+                            found = true;
                         }
-                        knsql.append(fname).append(" = ?").append(fname);
-                        found = true;
-                    }
-                } 
-                if(fkey) {
-                    if(criteria.length>0) criteria += " and ";
-                    criteria += fname+" = ?"+fname;
-                }               
+                    } 
+                    if(fkey) {
+                        if(criteria.length>0) criteria += " and ";
+                        criteria += fname+" = ?"+fname;
+                    } 
+                }              
             }
         }
         if(!found) throw new DBError("Invalid update statement",-30001);
@@ -87,52 +95,42 @@ export class KnHandler extends KnBase {
         if(model.fields) {
             let filter = " where ";
             for(let fname in model.fields) {
-                let dbf = model.fields[fname];
-                let fkey = dbf.key !== undefined && dbf.key;
-                if(fkey) {
-                    if(params && params[fname]) {
-                        knsql.append(filter);
-                        knsql.append(fname).append(" = ?").append(fname);
-                        filter = " and ";
-                        found = true;
-                    }
-                }               
+                if(!this.isInPageSetting(fname)) {
+                    let dbf = model.fields[fname];
+                    let fkey = dbf.key !== undefined && dbf.key;
+                    if(fkey) {
+                        if(params && params[fname]) {
+                            knsql.append(filter);
+                            knsql.append(fname).append(" = ?").append(fname);
+                            filter = " and ";
+                            found = true;
+                        }
+                    } 
+                }              
             }
         }
         if(found) this.obtainParameters(knsql, params);
         return knsql;
     }
 
-    protected buildSelectQuery(model: KnModel, params?: any) : SQLInterface {
+    private buildFilterQuery(knsql: SQLInterface, model: KnModel, params?: any) : SQLInterface {
         let criteria = "";
-        let selstr = "";
-        let foundselected = false;
-        let knsql = new KnSQL("select ");
         if(model.fields) {
             for(let fname in model.fields) {
-                let dbf = model.fields[fname];
-                let fcalc = dbf.calculated !== undefined && dbf.calculated;
-                if(!fcalc) {
-                    let fkey = dbf.key !== undefined && dbf.key;
-                    if(fkey) {
-                        if(params && params[fname]) {
-                            if(criteria.length>0) criteria += " and ";
-                            criteria += fname+" = ?"+fname;
-                        }
-                    } 
-                    let selected = typeof dbf.selected === "undefined" || dbf.selected;
-                    if(selected) {
-                        if(foundselected) selstr += ",";
-                        selstr += fname;
-                        foundselected = true;
-                    }           
-                }                   
+                if(!this.isInPageSetting(fname)) {
+                    let dbf = model.fields[fname];
+                    let fcalc = dbf.calculated !== undefined && dbf.calculated;
+                    if(!fcalc) {
+                        let fkey = dbf.key !== undefined && dbf.key;
+                        if(fkey) {
+                            if(params && params[fname]) {
+                                if(criteria.length>0) criteria += " and ";
+                                criteria += fname+" = ?"+fname;
+                            }
+                        } 
+                    }                   
+                }
             }
-        }
-        if(selstr.length>0) {
-            knsql.append(selstr);
-        } else {
-            knsql.append("*");
         }
         knsql.append(" from ");
         knsql.append(model.name);
@@ -143,12 +141,64 @@ export class KnHandler extends KnBase {
             if(params) {
                 let filter = " where ";
                 for(let p in params) {
-                    let pv = params[p];
-                    knsql.append(filter).append(p).append(" = ?").append(p);
-                    knsql.set(p,pv);
-                    filter = " and ";
+                    if(!this.isInPageSetting(p)) {                    
+                        let pv = params[p];
+                        knsql.append(filter).append(p).append(" = ?").append(p);
+                        knsql.set(p,pv);
+                        filter = " and ";
+                    }
                 }
             }
+        }
+        return knsql;
+    }
+
+    protected buildCountQuery(model: KnModel, params?: any) : SQLInterface {
+        let knsql = new KnSQL("select count(*) as counter");
+        this.buildFilterQuery(knsql, model, params);
+        return knsql;
+    }
+
+    protected buildSelectQuery(config: DBConfig, pageSetting: PageSetting, model: KnModel, params?: any) : SQLInterface {
+        let selstr = "";
+        let foundselected = false;
+        let knsql = new KnSQL("select ");
+        if(model.fields) {
+            for(let fname in model.fields) {
+                if(!this.isInPageSetting(fname)) {
+                    let dbf = model.fields[fname];
+                    let fcalc = dbf.calculated !== undefined && dbf.calculated;
+                    if(!fcalc) {
+                        let selected = typeof dbf.selected === "undefined" || dbf.selected;
+                        if(selected) {
+                            if(foundselected) selstr += ",";
+                            selstr += fname;
+                            foundselected = true;
+                        }           
+                    } 
+                }                  
+            }
+        }
+        let isInformix = DBUtils.isINFORMIX(config);
+        let offsetQuery = this.createQueryPaging(config, pageSetting);
+        if(isInformix) {
+            knsql.append(offsetQuery);
+        }
+        if(selstr.length>0) {
+            knsql.append(selstr);
+        } else {
+            knsql.append("*");
+        }
+        this.buildFilterQuery(knsql, model, params);
+        if(pageSetting.sorter && pageSetting.sorter!="") {
+            knsql.append(" ORDER BY ").append(pageSetting.sorter);
+            if(pageSetting.orderby && pageSetting.orderby!="") {
+                knsql.append(" ").append(pageSetting.orderby);
+            }
+            knsql.append(" ");
+        }
+        if(!isInformix) {
+            knsql.append(offsetQuery);
         }
         return knsql;
     }
@@ -187,9 +237,21 @@ export class KnHandler extends KnBase {
     protected override async doFind(context: any, model: KnModel) : Promise<ResultSet> {
         let db = this.getPrivateConnector(model);
         try {
-            let knsql = this.buildSelectQuery(model, context.params);
+            let pageSetting = this.getPageSetting(context.params);
+            let knsql = this.buildCountQuery(model, context.params);
             this.debug(knsql);
-            return await knsql.executeQuery(db);
+            let rs = await knsql.executeQuery(db);
+            if(rs.rows && rs.rows.length>0) {
+                let row = rs.rows[0];
+                pageSetting.totalRows = row.counter;
+            }
+            this.calculatePageOffset(pageSetting);
+            this.debug("PageSetting",pageSetting);
+            knsql = this.buildSelectQuery(db.config, pageSetting, model, context.params);
+            this.debug(knsql);
+            rs = await knsql.executeQuery(db);
+            rs.offsets = pageSetting;
+            return rs;
         } finally {
             db.close();
         }

@@ -1,14 +1,16 @@
 import { SQLInterface } from "will-sql";
-import { ServiceHandler, HandlerSetting, KnModel, LoggerInterface } from "./KnAlias";
+import { ServiceHandler, HandlerSetting, KnModel, LoggerInterface, KnSetting } from "./KnAlias";
 import { KnLogger } from "./KnLogger";
 
 export abstract class BaseHandler implements ServiceHandler {
     public handlers? : HandlerSetting[];
     public model? : KnModel;
+    public settings : KnSetting = { rowsPerPage: 20, maxRowsPerPage: 100, maxLimit: -1 };
     public logger: LoggerInterface = new KnLogger(); 
     
-    constructor(model?: KnModel) {
+    constructor(model?: KnModel, settings?: KnSetting) {
         this.model = model;
+        this.settings = { ...this.settings, ...settings };
     }
 
     public init(broker?: any, service?: any) : void {

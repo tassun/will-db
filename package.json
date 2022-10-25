@@ -1,13 +1,20 @@
 {
   "name": "will-db",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Relational Database service for moleculer",
   "main": "index.js",
   "scripts": {
     "build": "tsc --project ./",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["SQL","Database","KnService","KnHandler","KnAlias","KnSQL"],
+  "keywords": [
+    "SQL",
+    "Database",
+    "KnService",
+    "KnHandler",
+    "KnAlias",
+    "KnSQL"
+  ],
   "author": "tassun_oro@hotmail.com",
   "license": "MIT",
   "bugs": {
@@ -21,7 +28,7 @@
   "dependencies": {
     "config": "^3.3.8",
     "moleculer": "^0.14.24",
-    "will-sql": "^1.0.8"
+    "will-sql": "^1.0.10"
   },
   "devDependencies": {
     "@types/config": "^3.3.0",

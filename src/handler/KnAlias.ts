@@ -1,4 +1,4 @@
-import { DBConfig, DBTypes, SQLInterface } from "will-sql";
+import { DBConfig, DBTypes, PageOffset, SQLInterface } from "will-sql";
 
 export type GenericObject = { [name: string]: any };
 
@@ -28,10 +28,29 @@ export interface KnModel {
     fields?: FieldSetting;
 }
 
+export interface KnSetting {
+    rowsPerPage: number;
+    maxRowsPerPage: number;
+    maxLimit: number;
+}
+
 export interface HandlerSetting {
     name: string;
     options?: GenericObject;
 }
+
+export interface PageSetting extends PageOffset {
+    /**
+     * Sorter field/column name
+     */
+    sorter?: string;
+    /**
+     * Order option ascending or descending
+     */
+    orderby?: string | "ASC" | "DESC";
+}
+
+export const KeyPageSetting : string[] = [ "totalRows", "limit", "page", "offset", "rowsPerPage", "totalPages", "sorter", "orderby" ];
 
 export interface LoggerInterface {
     fatal(...args: any[]): void;

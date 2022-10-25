@@ -22,10 +22,26 @@ export interface KnModel {
     alias: KnAlias;
     fields?: FieldSetting;
 }
+export interface KnSetting {
+    rowsPerPage: number;
+    maxRowsPerPage: number;
+    maxLimit: number;
+}
 export interface HandlerSetting {
     name: string;
     options?: GenericObject;
 }
+export interface PageSetting extends PageOffset {
+    /**
+     * Sorter field/column name
+     */
+    sorter?: string;
+    /**
+     * Order option ascending or descending
+     */
+    orderby?: string | "ASC" | "DESC";
+}
+export declare const KeyPageSetting: string[];
 export interface LoggerInterface {
     fatal(...args: any[]): void;
     error(...args: any[]): void;
@@ -54,8 +70,9 @@ export interface ServiceHandler {
 export declare abstract class BaseHandler implements ServiceHandler {
     handlers?: HandlerSetting[];
     model?: KnModel;
+    settings: KnSetting;
     logger: LoggerInterface;
-    constructor(model?: KnModel);
+    constructor(model?: KnModel, settings?: KnSetting);
     init(broker?: any, service?: any): void;
     clear(context: any): Promise<any>;
     create(context: any): Promise<any>;
@@ -77,6 +94,9 @@ export declare class KnBase extends BaseHandler {
     init(broker: ServiceBroker, service: ServiceSchema): void;
     destroy(): void;
     getConnector(schema: string | DBConfig): DBConnector;
+    getPageSetting(params: any): PageSetting;
+    calculatePageOffset(pageOffset: PageOffset, totalRows?: number): PageOffset;
+    createQueryPaging(config: DBConfig, pageOffset: PageOffset): string;
     fatal(...args: any[]): void;
     error(...args: any[]): void;
     warn(...args: any[]): void;
@@ -101,10 +121,13 @@ export declare class KnBase extends BaseHandler {
 }
 
 export declare class KnHandler extends KnBase {
+    private isInPageSetting;
     protected buildInsertQuery(model: KnModel, params?: any): SQLInterface;
     protected buildUpdateQuery(model: KnModel, params?: any): SQLInterface;
     protected buildDeleteQuery(model: KnModel, params?: any): SQLInterface;
-    protected buildSelectQuery(model: KnModel, params?: any): SQLInterface;
+    private buildFilterQuery;
+    protected buildCountQuery(model: KnModel, params?: any): SQLInterface;
+    protected buildSelectQuery(config: DBConfig, pageSetting: PageSetting, model: KnModel, params?: any): SQLInterface;
     protected obtainParameters(knsql: SQLInterface, params?: any): void;
     protected doClear(context: any, model: KnModel): Promise<ResultSet>;
     protected doCreate(context: any, model: KnModel): Promise<ResultSet>;
