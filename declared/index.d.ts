@@ -124,12 +124,13 @@ export declare class KnBase extends BaseHandler {
 
 export declare class KnHandler extends KnBase {
     private isInPageSetting;
-    protected buildInsertQuery(model: KnModel, params?: any): SQLInterface;
-    protected buildUpdateQuery(model: KnModel, params?: any): SQLInterface;
-    protected buildDeleteQuery(model: KnModel, params?: any): SQLInterface;
+    private buildInsertQuery;
+    private buildUpdateQuery;
+    private buildDeleteQuery;
     private buildFilterQuery;
-    protected buildCountQuery(model: KnModel, params?: any): SQLInterface;
-    protected buildSelectQuery(config: DBConfig, pageSetting: PageSetting, model: KnModel, params?: any): SQLInterface;
+    private buildCriteriaQuery;
+    private buildCountQuery;
+    private buildSelectQuery;
     protected obtainParameters(knsql: SQLInterface, params?: any): void;
     protected doClear(context: any, model: KnModel): Promise<ResultSet>;
     protected doCreate(context: any, model: KnModel): Promise<ResultSet>;

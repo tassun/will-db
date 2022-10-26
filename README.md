@@ -20,7 +20,8 @@ This module require configuration ([config](https://www.npmjs.com/package/config
     "ODBC" : { "alias": "odbc", "dialect": "mysql", "url": "DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=localhost;DATABASE=testdb;HOST=localhost;PORT=3306;UID=user;PWD=password;", "user": "user", "password": "password" },
     "MSSQL": { "alias": "mssql", "dialect": "mssql", "url": "Server=localhost,1433;Database=testdb;User Id=user;Password=password;Encrypt=false;Trusted_Connection=Yes;", "user": "user", "password": "password" },
     "ORACLE": { "alias": "oracle", "dialect": "oracle", "url": "localhost:1521/ORCLCDB.localdomain", "user": "user", "password": "password" },
-    "POSTGRES": { "alias": "postgres", "dialect": "postgres", "url": "postgresql://user:password@localhost:5432/testdb", "user": "user", "password": "password" }
+    "POSTGRES": { "alias": "postgres", "dialect": "postgres", "url": "postgresql://user:password@localhost:5432/testdb", "user": "user", "password": "password" },
+    "INFORMIX": { "alias": "odbc", "dialect": "informix", "url": "DRIVER={IBM INFORMIX ODBC DRIVER (64-bit)};SERVER=online_localhost;DATABASE=refdb;HOST=localhost;SERVICE=9088;UID=user;PWD=password;CLIENT_LOCALE=th_th.thai620;DB_LOCALE=th_th.thai620;", "user": "user", "password":"password" }
 }
 ```
 
@@ -116,7 +117,7 @@ broker.createService({
     }
 });
 broker.start()
-.then(() => broker.call("service.update",{share: "XXX", yield: 55, remark: "Update Testing"}).then((result) => { 
+.then(() => broker.call("service.update",{yield: 55, remark: "Update Testing"}).then((result) => { 
     console.log("service.update",result);
 }))
 ```
@@ -366,17 +367,18 @@ broker.start()
 Result set of paging include attribute
 
     offsets: {
-        //total rows from query
-        totalRows: 27,
-        limit: 10,
         //current page
         page: 1,
-        //offset query depending on current page
-        offset: 0,
         //number of rows per page
         rowsPerPage: 10,
+        //total rows from query
+        totalRows: 27,
         //total pages
         totalPages: 3,
+        //limit of result set
+        limit: 10,
+        //offset query depending on current page
+        offset: 0,
         //order by field name
         orderBy: 'field1',
         //order direction (ASC/DESC)

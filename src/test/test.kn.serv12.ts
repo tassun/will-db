@@ -20,16 +20,12 @@ broker.createService({
 
 broker.start()
 
-.then(() => broker.call("service.list").then((result) => { 
-    console.log("service.list",result);
-}))
-
-.then(() => broker.call("service.find",{share: "BBL"}).then((result) => { 
-    console.log("service.find",result);
+.then(() => broker.call("service.update",{yield: 55, remark: "Update Testing"}).then((result) => { 
+    console.log("service.update",result);
 }))
 
 /*
-.then(() => broker.call("service.create",{share: "UOB", yield: 45, percent: 35, mktid: "TSO", remark: "Testing"}).then((result) => { 
-    console.log("service.create",result);
+.then(() => broker.call("service.update").then((result) => {  //error coz no update fields
+    console.log("service.update",result);
 }))
 */

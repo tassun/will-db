@@ -8,13 +8,13 @@ export class KnHandler extends KnBase {
         return KeyPageSetting.includes(key);
     }
 
-    protected buildInsertQuery(model: KnModel, params?: any) : SQLInterface {
+    private buildInsertQuery(model: KnModel, params?: any) : SQLInterface {
         let cols = "";
         let vals = "";
         let found = false;
         let knsql = new KnSQL("insert into ");
         knsql.append(model.name).append("(");
-        //if defined fields then using it
+        //if defined fields then use it
         if(model.fields) {
             for(let fname in model.fields) {
                 let dbf = model.fields[fname];
@@ -31,7 +31,7 @@ export class KnHandler extends KnBase {
             }
         }
         if(params) {
-            //if do not defined fields then using from parameters setting
+            //if do not defined fields then use from parameters setting
             let first = true;
             for(let p in params) {
                 if(!this.isInPageSetting(p)) {
@@ -53,7 +53,7 @@ export class KnHandler extends KnBase {
         return knsql;
     }
 
-    protected buildUpdateQuery(model: KnModel, params?: any) : SQLInterface {
+    private buildUpdateQuery(model: KnModel, params?: any) : SQLInterface {
         let criteria = "";
         let found = false;
         let knsql = new KnSQL("update ");
@@ -80,6 +80,20 @@ export class KnHandler extends KnBase {
                 }              
             }
         }
+        if(!found) {
+            if(params) {
+                let filter = "";
+                for(let p in params) {
+                    if(!this.isInPageSetting(p)) {                    
+                        let pv = params[p];
+                        knsql.append(filter).append(p).append(" = ?").append(p);
+                        knsql.set(p,pv);
+                        filter = ", ";
+                        found = true;
+                    }
+                }
+            }        
+        }
         if(!found) throw new DBError("Invalid update statement",-30001);
         if(criteria.length>0) {
             knsql.append(" where ").append(criteria);
@@ -88,7 +102,7 @@ export class KnHandler extends KnBase {
         return knsql;
     }
 
-    protected buildDeleteQuery(model: KnModel, params?: any) : SQLInterface {
+    private buildDeleteQuery(model: KnModel, params?: any) : SQLInterface {
         let found = false;
         let knsql = new KnSQL("delete from ");
         knsql.append(model.name);
@@ -108,6 +122,9 @@ export class KnHandler extends KnBase {
                     } 
                 }              
             }
+        }
+        if(!found) {
+            this.buildCriteriaQuery(knsql, params);
         }
         if(found) this.obtainParameters(knsql, params);
         return knsql;
@@ -138,28 +155,35 @@ export class KnHandler extends KnBase {
             knsql.append(" where ").append(criteria);
             this.obtainParameters(knsql, params);
         } else {
-            if(params) {
-                let filter = " where ";
-                for(let p in params) {
-                    if(!this.isInPageSetting(p)) {                    
-                        let pv = params[p];
-                        knsql.append(filter).append(p).append(" = ?").append(p);
-                        knsql.set(p,pv);
-                        filter = " and ";
-                    }
-                }
-            }
+            this.buildCriteriaQuery(knsql, params);
         }
         return knsql;
     }
 
-    protected buildCountQuery(model: KnModel, params?: any) : SQLInterface {
+    private buildCriteriaQuery(knsql: SQLInterface, params?: any) : boolean {
+        let result = false;
+        if(params) {
+            let filter = " where ";
+            for(let p in params) {
+                if(!this.isInPageSetting(p)) {                    
+                    let pv = params[p];
+                    knsql.append(filter).append(p).append(" = ?").append(p);
+                    knsql.set(p,pv);
+                    filter = " and ";
+                    result = true;
+                }
+            }
+        }
+        return result;
+    }
+
+    private buildCountQuery(model: KnModel, params?: any) : SQLInterface {
         let knsql = new KnSQL("select count(*) as counter");
         this.buildFilterQuery(knsql, model, params);
         return knsql;
     }
 
-    protected buildSelectQuery(config: DBConfig, pageSetting: PageSetting, model: KnModel, params?: any) : SQLInterface {
+    private buildSelectQuery(config: DBConfig, pageSetting: PageSetting, model: KnModel, params?: any) : SQLInterface {
         let selstr = "";
         let foundselected = false;
         let knsql = new KnSQL("select ");
@@ -196,6 +220,8 @@ export class KnHandler extends KnBase {
                 knsql.append(" ").append(pageSetting.orderDir);
             }
             knsql.append(" ");
+        } else {
+            knsql.append(" ORDER BY 1 ");
         }
         if(!isInformix) {
             knsql.append(offsetQuery);
@@ -241,9 +267,10 @@ export class KnHandler extends KnBase {
             let knsql = this.buildCountQuery(model, context.params);
             this.debug(knsql);
             let rs = await knsql.executeQuery(db);
+            this.debug(rs);
             if(rs.rows && rs.rows.length>0) {
                 let row = rs.rows[0];
-                pageSetting.totalRows = row.counter;
+                pageSetting.totalRows = row.counter | row.COUNTER;
             }
             this.calculatePageOffset(pageSetting);
             this.debug("PageSetting",pageSetting);

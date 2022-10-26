@@ -8,6 +8,7 @@ export class SQLUtils {
         if(DBUtils.isMYSQL(config) || DBUtils.isDB2(config)) {
             sql += " LIMIT "+pageOffset.offset+", "+pageOffset.rowsPerPage+" ";
         } else if(DBUtils.isMSSQL(config) || DBUtils.isORACLE(config)) {
+			//caution: sqlserver need order by clause before offset & fetch otherwise error
             sql += " OFFSET "+pageOffset.offset+" ROWS ";
             sql += " FETCH NEXT "+pageOffset.rowsPerPage+" ROWS ONLY ";
         } else if(DBUtils.isINFORMIX(config)) {
@@ -41,7 +42,7 @@ export class SQLUtils {
     }
     
     public static getPageSetting(settings: KnSetting, params: any) : PageSetting {
-        let result : PageSetting = { totalRows: 0, limit: 10, page: 1, offset: 10, rowsPerPage: settings.rowsPerPage, totalPages: 1 };
+        let result : PageSetting = { page: 1, rowsPerPage: settings.rowsPerPage, totalRows: 0, totalPages: 1, limit: 10, offset: 10 };
         if(params) {
             if(params.limit) {
                 if(typeof(params.limit) === "string") {

@@ -1,6 +1,11 @@
 import { ServiceBroker } from "moleculer";
 import KnService from "../handler/KnService";
 
+let dbschema = "MYSQL";
+let args = process.argv.splice(2);
+if(args.length>0) dbschema = args[0];
+console.log("db schema",dbschema);
+
 const broker = new ServiceBroker({
     logLevel: "debug"
 });
@@ -9,7 +14,7 @@ broker.createService({
     mixins: [KnService],
     model: {
         name: "test1",
-        alias: { privateAlias: "MYSQL" },
+        alias: { privateAlias: dbschema },
     },
     //as default rowsPerPage = 20 and maxRowsPerPage = 100
     //this setting will override default value
