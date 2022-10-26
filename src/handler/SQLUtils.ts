@@ -81,6 +81,7 @@ export class SQLUtils {
         if(settings.maxLimit > 0 && result.limit > settings.maxLimit) {
             result.limit = settings.maxLimit;
         }
+        if(result.limit <= 0) result.limit = 10;
         if(result.page <= 0) result.page = 1;
         if(result.rowsPerPage <= 0) result.rowsPerPage = settings.rowsPerPage;
         return result;

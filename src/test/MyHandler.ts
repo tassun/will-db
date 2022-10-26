@@ -4,7 +4,7 @@ import { KnSQL, ResultSet } from "will-sql";
 
 class MyHandler extends KnHandler {
 
-    public override retrieve(context: any) : Promise<ResultSet> {
+    public override async retrieve(context: any) : Promise<ResultSet> {
         console.debug("MyHandler",this);
         console.debug("MyHandler:context",context);
         console.debug("MyHandler:model",this.model);

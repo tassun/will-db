@@ -1,6 +1,6 @@
 import { ServiceBroker, ServiceSchema } from "moleculer";
 import { BaseHandler } from "./BaseHandler";
-import { DBConfig, DBConnections, DBConnector, PageOffset, ResultSet } from "will-sql";
+import { DBConfig, DBConnections, DBConnector, DBError, PageOffset, ResultSet } from "will-sql";
 import { KnModel, PageSetting } from "./KnAlias";
 import { SQLUtils } from "./SQLUtils";
 
@@ -134,14 +134,17 @@ export class KnBase extends BaseHandler {
     }
 
     protected getPrivateConnector(model: KnModel) : DBConnector {
+        if(!model.alias.privateAlias) throw new DBError("Model setting alias.privateAlias does not defined",-30301);
         return this.getConnector(model.alias.privateAlias);
     }
 
     protected getCenterConnector(model: KnModel) : DBConnector {
+        if(!model.alias.centerAlias) throw new DBError("Model setting alias.centerAlias does not defined",-30302);
         return this.getConnector(model.alias.centerAlias);
     }
 
     protected getGlobalConnector(model: KnModel) : DBConnector {
+        if(!model.alias.globalAlias) throw new DBError("Model setting alias.globalAlias does not defined",-30303);
         return this.getConnector(model.alias.globalAlias);
     }
 

@@ -19,7 +19,10 @@ broker.createService({
     //as default rowsPerPage = 20 and maxRowsPerPage = 100
     //this setting will override default value
     settings: {
+        //this is minimum number of records return
         rowsPerPage: 10,
+        //this is maximum number of records return, 
+        //so it can reach when defined rowsPerPage over as parameter
         maxRowsPerPage: 100,
     }
 });

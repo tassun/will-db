@@ -174,7 +174,7 @@ broker.createService({
 });
 
 broker.start()
-.then(() => broker.call("service.find",{share: "BBL"}).then((result) => { 
+.then(() => broker.call("service.find",{share: "XXX"}).then((result) => { 
     console.log("service.find",result);
 }))
 ```
@@ -318,7 +318,7 @@ broker.start()
 
 ### Pagination
 
-For action `find` and `list` support paging as default.
+In order to reduce large result set from query. Action `find` and `list` support paging as default.
 
 ```typescript
 import { ServiceBroker } from "moleculer";
@@ -337,7 +337,10 @@ broker.createService({
     //as default rowsPerPage = 20 and maxRowsPerPage = 100
     //this setting will override default value
     settings: {
+        //this is minimum number of records return
         rowsPerPage: 10,
+        //this is maximum number of records return, 
+        //so it can reach when defined rowsPerPage over as parameter
         maxRowsPerPage: 200,
     }
 });
