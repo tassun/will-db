@@ -190,10 +190,10 @@ export class KnHandler extends KnBase {
             knsql.append("*");
         }
         this.buildFilterQuery(knsql, model, params);
-        if(pageSetting.sorter && pageSetting.sorter!="") {
-            knsql.append(" ORDER BY ").append(pageSetting.sorter);
-            if(pageSetting.orderby && pageSetting.orderby!="") {
-                knsql.append(" ").append(pageSetting.orderby);
+        if(pageSetting.orderBy && pageSetting.orderBy!="") {
+            knsql.append(" ORDER BY ").append(pageSetting.orderBy);
+            if(pageSetting.orderDir && pageSetting.orderDir!="") {
+                knsql.append(" ").append(pageSetting.orderDir);
             }
             knsql.append(" ");
         }

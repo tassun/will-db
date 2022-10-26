@@ -26,3 +26,4 @@ broker.start()
 
 //curl http://localhost:4000/service/collect
 //curl http://localhost:4000/service/collect?sharecode=BBL
+//curl -v -X POST -H "Content-Type: application/json" http://localhost:4000/service/collect -d "{\"sharecode\":\"BBL\"}"

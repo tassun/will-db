@@ -71,8 +71,8 @@ export class SQLUtils {
                     result.rowsPerPage = params.rowsPerPage;
                 }
             }
-            if(params.sorter) result.sorter = params.sorter;
-            if(params.orderby) result.orderby = params.orderby;
+            if(params.orderBy) result.orderBy = params.orderBy;
+            if(params.orderDir) result.orderDir = params.orderDir;
         }
         if(settings.maxRowsPerPage > 0 && result.rowsPerPage > settings.maxRowsPerPage) {
             result.rowsPerPage = settings.maxRowsPerPage;

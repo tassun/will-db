@@ -33,13 +33,13 @@ export interface HandlerSetting {
 }
 export interface PageSetting extends PageOffset {
     /**
-     * Sorter field/column name
+     * order by field/column name
      */
-    sorter?: string;
+    orderBy?: string;
     /**
-     * Order option ascending or descending
+     * order direction ascending or descending
      */
-    orderby?: string | "ASC" | "DESC";
+    orderDir?: string | "ASC" | "DESC";
 }
 export declare const KeyPageSetting: string[];
 export interface LoggerInterface {
@@ -117,7 +117,9 @@ export declare class KnBase extends BaseHandler {
     protected doFind(context: any, model: KnModel): Promise<ResultSet>;
     protected doUpdate(context: any, model: KnModel): Promise<ResultSet>;
     protected getPrivateConnector(model: KnModel): DBConnector;
-    protected isValidConfigure(model?: KnModel): boolean;
+    protected getCenterConnector(model: KnModel): DBConnector;
+    protected getGlobalConnector(model: KnModel): DBConnector;
+    protected isValidModelConfig(aliasName: string, model?: KnModel): boolean;
 }
 
 export declare class KnHandler extends KnBase {

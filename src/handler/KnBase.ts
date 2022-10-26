@@ -67,28 +67,28 @@ export class KnBase extends BaseHandler {
     }
 
     public override clear(context: any) : Promise<ResultSet> {
-        if(this.model && this.isValidConfigure(this.model)) {
+        if(this.model && this.isValidModelConfig("privateAlias",this.model)) {
             return this.doClear(context, this.model);
         }
         return Promise.resolve({rows: null, columns: null});
     }
 
     public override create(context: any) : Promise<ResultSet> {
-        if(this.model && this.isValidConfigure(this.model)) {
+        if(this.model && this.isValidModelConfig("privateAlias",this.model)) {
             return this.doCreate(context, this.model);
         }
         return Promise.resolve({rows: null, columns: null});
     }
 
     public override list(context: any) : Promise<ResultSet> {
-        if(this.model && this.isValidConfigure(this.model)) {
+        if(this.model && this.isValidModelConfig("privateAlias",this.model)) {
             return this.doFind(context, this.model);
         }
         return Promise.resolve({rows: null, columns: null});
     }
 
     public override find(context: any) : Promise<ResultSet> {
-        if(this.model && this.isValidConfigure(this.model)) {
+        if(this.model && this.isValidModelConfig("privateAlias",this.model)) {
             return this.doFind(context, this.model);
         }
         return Promise.resolve({rows: null, columns: null});
@@ -103,7 +103,7 @@ export class KnBase extends BaseHandler {
     }
 
     public override update(context: any) : Promise<ResultSet> {
-        if(this.model && this.isValidConfigure(this.model)) {
+        if(this.model && this.isValidModelConfig("privateAlias",this.model)) {
             return this.doUpdate(context, this.model);
         }
         return Promise.resolve({rows: null, columns: null});
@@ -137,9 +137,17 @@ export class KnBase extends BaseHandler {
         return this.getConnector(model.alias.privateAlias);
     }
 
-    protected isValidConfigure(model?: KnModel) : boolean {
+    protected getCenterConnector(model: KnModel) : DBConnector {
+        return this.getConnector(model.alias.centerAlias);
+    }
+
+    protected getGlobalConnector(model: KnModel) : DBConnector {
+        return this.getConnector(model.alias.globalAlias);
+    }
+
+    protected isValidModelConfig(aliasName: string, model?: KnModel) : boolean {
         if(this.model) {
-            if(this.model.name && this.model.alias.privateAlias) {
+            if(this.model.name && this.model.alias[aliasName]) {
                 return true;
             }
         }

@@ -24,12 +24,12 @@ broker.start()
 .then(() => broker.call("service.list").then((result) => { 
     console.log("service.list",result);
 }))
-//specified sorter field and order direction
-.then(() => broker.call("service.list",{page: 2, sorter: "field1", orderby: "ASC"}).then((result) => { 
+//specified order by field and order direction
+.then(() => broker.call("service.list",{page: 2, orderBy: "field1", orderDir: "ASC"}).then((result) => { 
     console.log("service.list",result);
 }))
 
-.then(() => broker.call("service.list",{page: 3, sorter: "field1", orderby: "DESC"}).then((result) => { 
+.then(() => broker.call("service.list",{page: 3, orderBy: "field1", orderDir: "DESC"}).then((result) => { 
     console.log("service.list",result);
 }))
 

@@ -41,16 +41,16 @@ export interface HandlerSetting {
 
 export interface PageSetting extends PageOffset {
     /**
-     * Sorter field/column name
+     * order by field/column name
      */
-    sorter?: string;
+    orderBy?: string;
     /**
-     * Order option ascending or descending
+     * order direction ascending or descending
      */
-    orderby?: string | "ASC" | "DESC";
+    orderDir?: string | "ASC" | "DESC";
 }
 
-export const KeyPageSetting : string[] = [ "totalRows", "limit", "page", "offset", "rowsPerPage", "totalPages", "sorter", "orderby" ];
+export const KeyPageSetting : string[] = [ "page", "rowsPerPage", "orderBy", "orderDir", "offset", "limit", "totalRows", "totalPages" ];
 
 export interface LoggerInterface {
     fatal(...args: any[]): void;
