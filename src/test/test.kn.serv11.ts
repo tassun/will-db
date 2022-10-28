@@ -16,6 +16,10 @@ broker.createService({
         name: "testdbx",
         alias: { privateAlias: dbschema },
     },
+    settings: {
+        disableColumnSchema: true,
+        //disablePageOffset: true,
+    }
 });
 
 broker.start()

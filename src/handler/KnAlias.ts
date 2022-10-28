@@ -32,6 +32,8 @@ export interface KnSetting {
     rowsPerPage: number;
     maxRowsPerPage: number;
     maxLimit: number;
+    disableColumnSchema?: boolean;
+    disablePageOffset?: boolean;
 }
 
 export interface HandlerSetting {

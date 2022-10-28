@@ -277,7 +277,12 @@ export class KnHandler extends KnBase {
             knsql = this.buildSelectQuery(db.config, pageSetting, model, context.params);
             this.debug(knsql);
             rs = await knsql.executeQuery(db);
-            rs.offsets = pageSetting;
+            if(typeof this.settings.disablePageOffset === "undefined" || !this.settings.disablePageOffset) {
+                rs.offsets = pageSetting;
+            }
+            if(typeof this.settings.disableColumnSchema !== "undefined" && this.settings.disableColumnSchema) {
+                delete rs.columns;
+            }
             return rs;
         } finally {
             db.close();

@@ -342,6 +342,10 @@ broker.createService({
         //this is maximum number of records return, 
         //so it can reach when defined rowsPerPage over as parameter
         maxRowsPerPage: 200,
+        //to disable column schema output
+        disableColumnSchema: true,
+        //to disable page offset output
+        disablePageOffset: true,
     }
 });
 
