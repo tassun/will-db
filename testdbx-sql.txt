@@ -1,0 +1,59 @@
+- mysql 
+	CREATE TABLE  `testdbx` (
+		`share` varchar(20) NOT NULL DEFAULT '',
+		`yield` decimal(20,2) DEFAULT NULL,
+		`percent` decimal(10,2) DEFAULT NULL,
+		`remark` varchar(100) DEFAULT NULL,
+		PRIMARY KEY (`share`)
+	) ENGINE=InnoDB;
+
+	insert into testdbx(share,yield,percent,remark) values('BBL',110,25,'testing');
+
+- ms sql server
+	CREATE TABLE  [dbo].[testdbx] (
+		[share] [varchar](20) DEFAULT NULL,
+		[yield] [decimal](20,2) DEFAULT NULL,
+		[percentage] [decimal](10,2) DEFAULT NULL,
+		[remark] [varchar](100) DEFAULT NULL,
+		[mktid] [varchar](50) NULL,
+		PRIMARY KEY ([share])
+	)
+
+	insert into testdbx(share,yield,percentage,remark,mktid) values('BBL',110,25,'testing','TST');
+
+- oracle
+	CREATE TABLE testdbx (
+		sharecode  varchar(20) NOT NULL , 
+		yield  decimal(20,2) , 
+		percentage  decimal(10,2) , 
+		remark  varchar(100) , 
+		PRIMARY KEY(sharecode) 
+	)
+
+	insert into testdbx (sharecode,yield,percentage,remark) values('BBL',110,25,'testing')
+
+- informix
+	CREATE TABLE testdbx (
+		share  varchar(20) NOT NULL , 
+		yield  decimal(20,2) , 
+		percent  decimal(10,2) , 
+		remark  varchar(100) , 
+		PRIMARY KEY(share) 
+	)
+	
+	insert into testdbx(share,yield,percent,remark) values('BBL',110,25,'testing');
+	
+- postgres
+	
+CREATE TABLE testdbx (
+    sharecode character varying(50) NOT NULL,
+    yield numeric(16,2),
+    percentage numeric(16,2),
+    remark character varying(100) ,
+    mktid character varying(50) ,
+    PRIMARY KEY (sharecode)
+)
+	
+	insert into testdbx(sharecode,yield,percentage,remark) values('BBL',110,25,'testing');
+	
+
