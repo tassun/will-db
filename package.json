@@ -1,6 +1,6 @@
 {
   "name": "will-db",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Relational Database service for moleculer",
   "main": "index.js",
   "scripts": {

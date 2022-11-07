@@ -82,7 +82,7 @@ export class KnBase extends BaseHandler {
 
     public override list(context: any) : Promise<ResultSet> {
         if(this.model && this.isValidModelConfig("privateAlias",this.model)) {
-            return this.doFind(context, this.model);
+            return this.doList(context, this.model);
         }
         return Promise.resolve({rows: null, columns: null});
     }
@@ -95,10 +95,16 @@ export class KnBase extends BaseHandler {
     }
 
     public override insert(context: any) : Promise<ResultSet> {
+        if(this.model && this.isValidModelConfig("privateAlias",this.model)) {
+            return this.doInsert(context, this.model);
+        }
         return Promise.resolve({rows: null, columns: null});
     }
 
     public override retrieve(context: any) : Promise<ResultSet> {
+        if(this.model && this.isValidModelConfig("privateAlias",this.model)) {
+            return this.doRetrieve(context, this.model);
+        }
         return Promise.resolve({rows: null, columns: null});
     }
 
@@ -110,10 +116,16 @@ export class KnBase extends BaseHandler {
     }
 
     public override remove(context: any) : Promise<ResultSet> {
+        if(this.model && this.isValidModelConfig("privateAlias",this.model)) {
+            return this.doRemove(context, this.model);
+        }
         return Promise.resolve({rows: null, columns: null});
     }
 
     public override collect(context: any) : Promise<ResultSet> {
+        if(this.model && this.isValidModelConfig("privateAlias",this.model)) {
+            return this.doCollect(context, this.model);
+        }
         return Promise.resolve({rows: null, columns: null});
     }
 
@@ -125,11 +137,31 @@ export class KnBase extends BaseHandler {
         return Promise.resolve({rows: null, columns: null});
     }
 
+    protected async doList(context: any, model: KnModel) : Promise<ResultSet> {
+        return this.doFind(context, model);
+    }
+
     protected async doFind(context: any, model: KnModel) : Promise<ResultSet> {
         return Promise.resolve({rows: null, columns: null});
     }
 
+    protected async doInsert(context: any, model: KnModel) : Promise<ResultSet> {
+        return Promise.resolve({rows: null, columns: null});
+    }
+
+    protected async doRetrieve(context: any, model: KnModel) : Promise<ResultSet> {
+        return Promise.resolve({rows: null, columns: null});
+    }
+
     protected async doUpdate(context: any, model: KnModel) : Promise<ResultSet> {
+        return Promise.resolve({rows: null, columns: null});
+    }
+
+    protected async doRemove(context: any, model: KnModel) : Promise<ResultSet> {
+        return Promise.resolve({rows: null, columns: null});
+    }
+
+    protected async doCollect(context: any, model: KnModel) : Promise<ResultSet> {
         return Promise.resolve({rows: null, columns: null});
     }
 

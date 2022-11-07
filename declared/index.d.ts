@@ -116,8 +116,13 @@ export declare class KnBase extends BaseHandler {
     collect(context: any): Promise<ResultSet>;
     protected doClear(context: any, model: KnModel): Promise<ResultSet>;
     protected doCreate(context: any, model: KnModel): Promise<ResultSet>;
+    protected doList(context: any, model: KnModel): Promise<ResultSet>;
     protected doFind(context: any, model: KnModel): Promise<ResultSet>;
+    protected doInsert(context: any, model: KnModel): Promise<ResultSet>;
+    protected doRetrieve(context: any, model: KnModel): Promise<ResultSet>;
     protected doUpdate(context: any, model: KnModel): Promise<ResultSet>;
+    protected doRemove(context: any, model: KnModel): Promise<ResultSet>;
+    protected doCollect(context: any, model: KnModel): Promise<ResultSet>;
     protected getPrivateConnector(model: KnModel): DBConnector;
     protected getCenterConnector(model: KnModel): DBConnector;
     protected getGlobalConnector(model: KnModel): DBConnector;
