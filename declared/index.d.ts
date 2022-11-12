@@ -69,7 +69,7 @@ export interface ServiceHandler {
     destroy(): void;
 }
 
-export declare abstract class BaseHandler implements ServiceHandler {
+export declare abstract class KnAbstract implements ServiceHandler {
     handlers?: HandlerSetting[];
     model?: KnModel;
     settings: KnSetting;
@@ -90,7 +90,7 @@ export declare abstract class BaseHandler implements ServiceHandler {
     destroy(): void;
 }
 
-export declare class KnBase extends BaseHandler {
+export declare class KnBase extends KnAbstract {
     broker?: ServiceBroker;
     service?: ServiceSchema;
     init(broker: ServiceBroker, service: ServiceSchema): void;

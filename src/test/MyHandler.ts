@@ -12,10 +12,23 @@ class MyHandler extends KnHandler {
     }
 
     //this is an addon action
-    public findby(context: any) : Promise<string> {
-        console.debug("findby",context);
-        return Promise.resolve("MyHandler.findby");
+    public async findby(context: any) : Promise<ResultSet> {
+        console.log("get: context",context);
+        let db = this.getPrivateConnector(this.model);
+        try {
+            let knsql = new KnSQL("select * from testdbx");
+            if(context.params.sharecode) {
+                knsql.append(" where share = ?sharecode ");
+                knsql.set("sharecode",context.params.sharecode);
+            }
+            this.debug(knsql);
+            let rs = await knsql.executeQuery(db);
+            return Promise.resolve(rs);
+        } finally {
+            db.close();
+        }
     }
+
     //must declared handlers in order to merge addon action to service 
     //ex. name: "findby" is the handler naming function from public findby(context) method
     public handlers = [ {name: "findby"} ];

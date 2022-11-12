@@ -2,7 +2,7 @@ import { SQLInterface } from "will-sql";
 import { ServiceHandler, HandlerSetting, KnModel, LoggerInterface, KnSetting } from "./KnAlias";
 import { KnLogger } from "./KnLogger";
 
-export abstract class BaseHandler implements ServiceHandler {
+export abstract class KnAbstract implements ServiceHandler {
     public handlers? : HandlerSetting[];
     public model? : KnModel;
     public settings : KnSetting = { rowsPerPage: 20, maxRowsPerPage: 100, maxLimit: -1 };

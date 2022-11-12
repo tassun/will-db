@@ -10,7 +10,7 @@ export {
     LoggerInterface,
     ServiceHandler    
 } from "./handler/KnAlias";
-export { BaseHandler } from "./handler/BaseHandler";
+export { KnAbstract } from "./handler/KnAbstract";
 export { KnBase } from "./handler/KnBase";
 export { KnHandler } from "./handler/KnHandler";
 export { KnLogger } from "./handler/KnLogger";

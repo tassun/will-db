@@ -1,10 +1,11 @@
 {
   "name": "will-db",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Relational Database service for moleculer",
   "main": "index.js",
   "scripts": {
     "build": "tsc --project ./",
+    "kn:web": "ts-node-dev src/test/test.kn.web.ts",
     "test": "ts-node-dev src/test/test.index.ts"
   },
   "keywords": [
@@ -28,8 +29,8 @@
   "dependencies": {
     "config": "^3.3.8",
     "moleculer": "^0.14.24",
-    "will-sql": "^1.0.12",
-    "will-util": "^1.0.0"
+    "will-sql": "^1.0.14",
+    "will-util": "^1.0.2"
   },
   "devDependencies": {
     "@types/config": "^3.3.0",

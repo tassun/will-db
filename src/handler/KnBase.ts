@@ -1,10 +1,10 @@
 import { ServiceBroker, ServiceSchema } from "moleculer";
-import { BaseHandler } from "./BaseHandler";
+import { KnAbstract } from "./KnAbstract";
 import { DBConfig, DBConnections, DBConnector, DBError, PageOffset, ResultSet } from "will-sql";
 import { KnModel, PageSetting } from "./KnAlias";
 import { SQLUtils } from "./SQLUtils";
 
-export class KnBase extends BaseHandler {
+export class KnBase extends KnAbstract {
     public broker? : ServiceBroker;
     public service? : ServiceSchema;
 
